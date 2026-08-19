@@ -5,10 +5,13 @@ This project provides a playbook for implementing personal data portability.  It
 what approach to take to meet regulatory requirements, to provide data access that works for users and their 3rd-party tools, and to keep their effort and
 maintenance costs low.
 
+We're not compliance lawyers, so this isn't legal compliance advice! It's a resource to make 
+compliance simpler if this basic approach satisfies your compliance requirements. 
+
 ## Basic Approach
 
 Our basic approach here is to help you build a HTTP+OAuth+JSON API quickly and efficiently.  A REST style is used due to its overwhelming familiarity and existence of mature and scalable tools.  The 
-result should also have good data security, ops, defensibility and scaling characteristics.
+result should also have good data security, ops, resiliency and scaling characteristics.
 
 ```
 ┌─────────────────────────────┐
@@ -51,20 +54,21 @@ There are two major ways to use this playbook
 
 ## Jobs to be done
 
-1. Identifying what counts as portable data
-2. Suggest some libraries and frameworks for the project
-3. Explain how to use JSON Schema to define data formats
-4. Explain how to hook your service's data storage into API
-5. Make sure that data access is keyed to the user
-6. Handle when there are references to OTHER users in personal data
-7. Allow efficient async requests for chunks of bulk data with pagination or cursors
-8. Hook in API keys for defensibility and rate-limiting 
-9. Hook in OAuth for authorization of data access, with limited access scopes
-10. Log grants and data access requests
-11. View current access grants
-12. Cloud deployment/ops plans
-13. API discovery (including data schemas and OAuth scopes)
-14. Plan for the future with a schema evolution strategy
+1. [Identify what counts as portable data](docs/01-identifying-portable-data.md)
+2. [Pick some libraries and frameworks for the project](docs/02-libraries-frameworks.md)
+3. [Use JSON Schema to define data formats](docs/03-json-schema.md)
+4. [Map your service's data storage to your external format](docs/04-hooking-storage-into-api.md)
+5. Choose appropriate API endpoints
+6. Implement access control keyed to the user
+7. Handle references to OTHER users in personal data
+8. Allow efficient async requests for chunks of bulk data with pagination or cursors
+9. Use API keys for defensibility and rate-limiting 
+10. Use OAuth for authorization of data access, with limited scopes
+11. Log grants and data access requests
+12. Allow users (and admins) to view current access grants
+13. Plan for cloud deployment/ops
+14. Support API discovery (including data schemas and OAuth scopes)
+15. Plan for the future with a schema evolution strategy
 
 
 ## Meeting regulatory requirements

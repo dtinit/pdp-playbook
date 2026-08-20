@@ -27,6 +27,40 @@ few small, focused schemas beat one sprawling one:
 This also keeps pagination sane later — you'll paginate a history feed very differently from
 a one-off content export (see [job 8](08-pagination.md)).
 
+## Goldilocks sizing
+
+That said, we also don't want data objects to be too small.  Consider the following real
+API:
+ * Endpoint/model for "event" data object with category *codes* and venue location *ids*
+ * Endpoint/model for categories, to map from codes like '13' to words like 'baseball'
+ * Endpoint/model for venues, to map from ids like 'b027eefba7f0' to venue name and address
+ * Endpoint/model for list of tickets available for the event...
+ 
+The overall API was hard to maintain and hard to use.  It would have been very fast to cache
+the category names and replace category codes (the internal data storage) with category names. 
+It would have been a simple JOIN to join the backend venue table into the event table 
+and save the user another round trip fetching the venue to even know what city it's in.  
+Worse, this ties the external API directly to internal implementation choices and internal
+codes.  
+
+Should consolidating to better meet user needs and improve maintainability go so far as to
+join the list of tickets into the event response and include ticket data in the event data model?
+Now we're getting into a judgement call
+that requires knowing how many tickets there are likely to be, how fast the query will be,
+and how often the user querying the API wants to know about tickets.  
+
+When making judgement calls for your own data models, consider a few principles
+ * It's OK to denormalize your data for outside consumption.  Heavily normalized data
+   optimizes for internal correctness. Denormalizing (like joining in the venue name and
+   address to the event in the example above) can be done in the API to make the API 
+   more usable and scalable without internal correctness suffering.
+ * Any time an id or code appears in the external data model that can't provide any
+   information without another API hit, 
+   consider whether this is an internal code that should be replaced with 
+   the actual information.  Sometimes you expose the id or code anyway - chat logs 
+   might use an account ID to make sure to uniquely identify the other party in the log - 
+   but be aware that this is a long-term commitment. 
+
 ## Anatomy of a schema
 
 Keep every schema to this shape:
@@ -74,13 +108,13 @@ Even so, set up the versioning scheme now, while it's cheap, so you're ready if 
 change does become necessary. Put the version in the `$id` path (`/schemas/playlist/v1.json`)
 rather than a separate field, so old links and cached copies keep resolving unchanged once
 there's a `v2` to resolve alongside them. This is the contract that
-[job 15's schema evolution strategy](15-schema-evolution.md) builds on — decide the scheme
+[job 16's schema evolution strategy](16-schema-evolution.md) builds on — decide the scheme
 now, because retrofitting it later breaks anyone who's already integrated.
 
 ## Where schemas live
 
 Serve schemas at the stable URLs used in their `$id`s, and list them somewhere discoverable —
-this feeds directly into [job 14, API discovery](14-api-discovery.md), where clients need to
+this feeds directly into [job 15, API discovery](15-api-discovery.md), where clients need to
 find both your endpoints and the schemas those endpoints return.
 
 ## Output of this step
@@ -88,4 +122,4 @@ find both your endpoints and the schemas those endpoints return.
 One JSON Schema file per data type from your inventory, checked into version control and
 served at a stable URL that's versioned in name only until you actually need a `v2`. This is
 the contract [job 4](04-hooking-storage-into-api.md) serializes your storage layer into, and
-what [job 14's discovery document](14-api-discovery.md) points clients at.
+what [job 15's discovery document](15-api-discovery.md) points clients at.

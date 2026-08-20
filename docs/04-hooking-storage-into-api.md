@@ -47,4 +47,4 @@ failing schema validation in CI the same as a failing type check.
 
 Working read endpoints, each backed by a mapper that produces its job 3 schema's shape from
 real storage and is tested against it. [Job 8](08-pagination.md) builds pagination on top of
-these reads, and [job 14](14-api-discovery.md) points clients at them.
+these reads, and [job 15](15-api-discovery.md) points clients at them.

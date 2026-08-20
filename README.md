@@ -52,23 +52,29 @@ There are two major ways to use this playbook
 1. Read it and see what ideas and pointers may be helpful. Maybe use the playbook to fill in your project plan.
 2. Point your AI coding agent at this playbook and ask it to follow the playbook until you're ready to deploy 
 
+Because this playbook is documenting common and widespread practices for exposing data,
+there are many examples in open source and published APIs.
+Rather than explaining 'endpoint', 'JSON object' or 'cursor',
+this playbook assumes that the reader already knows, can research, or can delegate the details.
+
 ## Jobs to be done
 
 1. [Identify what counts as portable data](docs/01-identifying-portable-data.md)
 2. [Pick some libraries and frameworks for the project](docs/02-libraries-frameworks.md)
 3. [Use JSON Schema to define data formats](docs/03-json-schema.md)
 4. [Map your service's data storage to your external format](docs/04-hooking-storage-into-api.md)
-5. Choose appropriate API endpoints
-6. Implement access control keyed to the user
-7. Handle references to OTHER users in personal data
-8. Allow efficient async requests for chunks of bulk data with pagination or cursors
+5. [Choose appropriate API endpoints](docs/05-choosing-endpoints.md)
+6. [Implement access control keyed to the user](docs/06-access-control.md)
+7. [Handle references to OTHER users in personal data](docs/07-references-to-other-users.md)
+8. [Allow efficient async requests for chunks of bulk data with pagination or cursors](docs/08-pagination.md)
 9. Use API keys for defensibility and rate-limiting 
 10. Use OAuth for authorization of data access, with limited scopes
 11. Log grants and data access requests
-12. Allow users (and admins) to view current access grants
-13. Plan for cloud deployment/ops
-14. Support API discovery (including data schemas and OAuth scopes)
-15. Plan for the future with a schema evolution strategy
+12. Publish documentation
+13. Design GUI elements (NOTE add export access for free using API)
+14. Plan for cloud deployment/ops
+15. Support API discovery (including data schemas and OAuth scopes)
+16. Plan for the future with a schema evolution strategy (NOTE add tests to expose gaps)
 
 
 ## Meeting regulatory requirements

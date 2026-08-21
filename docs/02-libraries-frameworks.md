@@ -35,6 +35,10 @@ mandate to add them regardless of what's already there.
   offset/limit pattern, and whether your ORM has cursor/keyset support built in (Prisma,
   Django's `QuerySet`, and others do). A pattern that already works elsewhere in the codebase
   is one less thing to design for [job 8](08-pagination.md).
+- **Rate limiting** — check whether any existing public endpoint already enforces a rate
+  limit, and what it's keyed off (IP, user, API key). Reusing that middleware/throttle
+  configuration, rekeyed to the API key from [job 9](09-api-keys.md), is usually less work
+  than adding a second rate-limiting layer.
 
 Note that the recommendations below for a template or transform library (your taste) don't
 mention serialization libraries, and that's intentional. An automated serialization approach
@@ -78,6 +82,14 @@ yourself, not a signal that you need a dependency to do this properly.
   a few lines. On MongoDB specifically,
   [mongo-cursor-pagination](https://www.npmjs.com/package/mongo-cursor-pagination) is a solid,
   purpose-built option. See [job 8](08-pagination.md).
+- **Rate limiting: [express-rate-limit](https://www.npmjs.com/package/express-rate-limit)** —
+  the standard choice for Express, with configurable time windows and standardized
+  `RateLimit-*` response headers out of the box. Its default in-memory store is fine for a
+  single instance; for multiple instances behind a load balancer, swap in a shared store (a
+  Redis-backed one is the common choice) so limits are enforced consistently across all of
+  them. Key it off the API key from [job 9](09-api-keys.md), not IP address, since a
+  legitimate client can share an IP with others (NAT, a shared office network) or rotate
+  across many.
 
 ## Python / Django
 
@@ -105,6 +117,13 @@ yourself, not a signal that you need a dependency to do this properly.
   it already ships with DRF. Reach for `LimitOffsetPagination` instead only for small,
   admin-style listings where jumping to an arbitrary offset matters more than performance at
   scale. See [job 8](08-pagination.md).
+- **Rate limiting:** DRF's built-in throttling — no extra dependency either. Its stock
+  `UserRateThrottle`/`AnonRateThrottle` key off the authenticated user or the request IP,
+  neither of which is what [job 9](09-api-keys.md) wants; subclass `SimpleRateThrottle` and
+  override `get_cache_key` to key off the API key instead. `ScopedRateThrottle` is worth
+  layering on top if different endpoints need different limits. DRF stores counts in Django's
+  configured cache backend, so a real cache (Redis or Memcached, not the local-memory default)
+  matters once you're running more than one server process.
 
 ## Other languages
 
@@ -112,16 +131,17 @@ Follow the same pattern in whatever framework you're already running: a fast, sp
 JSON Schema validator; an explicit field-by-field mapper rather than reflection-based
 auto-serialization; a key-issuing/checking library (or hand-rolled equivalent) for client
 identification; either an OAuth authorization-server library or toolkit for user-authorized
-access; and a cursor pagination approach, likely already available in your ORM or query
-builder. The specific package names change; jobs to be done don't.
+access; a cursor pagination approach, likely already available in your ORM or query builder;
+and a rate-limiting middleware or framework feature, keyed off that same API key rather than
+IP or user account. The specific package names change; jobs to be done don't.
 
 ## Output of this step
 
 A validator, a mapping approach, and your picks — or deliberate hand-rolled approach — for
-API keys, OAuth, and pagination, reused from what already exists in your project where the
-survey above found something, added fresh where it didn't. The validator and mapper get wired
-into your build or test suite now, so any response can be checked against its
-[job 3](03-json-schema.md) schema before it ships — which is what
+API keys, OAuth, pagination, and rate limiting, reused from what already exists in your
+project where the survey above found something, added fresh where it didn't. The validator
+and mapper get wired into your build or test suite now, so any response can be checked against
+its [job 3](03-json-schema.md) schema before it ships — which is what
 [job 4](04-hooking-storage-into-api.md) will build on to connect these to real storage. The
-API-key, OAuth, and pagination picks wait until [job 8](08-pagination.md),
+API-key, rate-limiting, OAuth, and pagination picks wait until [job 8](08-pagination.md),
 [job 9](09-api-keys.md), and [job 10](10-oauth.md) respectively.

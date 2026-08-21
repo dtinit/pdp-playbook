@@ -67,10 +67,10 @@ this playbook assumes that the reader already knows, can research, or can delega
 6. [Implement access control keyed to the user](docs/06-access-control.md)
 7. [Handle references to OTHER users in personal data](docs/07-references-to-other-users.md)
 8. [Allow efficient async requests for chunks of bulk data with pagination or cursors](docs/08-pagination.md)
-9. Use API keys for defensibility and rate-limiting 
-10. Use OAuth for authorization of data access, with limited scopes
-11. Log grants and data access requests
-12. Publish documentation
+9. [Use API keys for defensibility and rate-limiting](docs/09-api-keys.md)
+10. [Use OAuth for authorization of data access, with limited scopes](docs/10-oauth.md)
+11. [Log grants and data access requests](docs/11-logging-access.md)
+12. [Publish documentation](docs/12-documentation.md)
 13. Design GUI elements (NOTE add export access for free using API)
 14. Plan for cloud deployment/ops
 15. Support API discovery (including data schemas and OAuth scopes)

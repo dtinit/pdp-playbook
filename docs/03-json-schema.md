@@ -117,6 +117,13 @@ Serve schemas at the stable URLs used in their `$id`s, and list them somewhere d
 this feeds directly into [job 15, API discovery](15-api-discovery.md), where clients need to
 find both your endpoints and the schemas those endpoints return.
 
+If you're already producing (or planning to produce) an OpenAPI document for
+[job 12](12-documentation.md)'s documentation or [job 15](15-api-discovery.md)'s discovery,
+note that OpenAPI 3.1 is fully compatible with JSON Schema draft 2020-12 — the same draft
+recommended above. That means these schemas can be referenced directly from an OpenAPI
+document's `components.schemas`, rather than maintained as a separate, parallel description of
+the same shapes.
+
 ## Output of this step
 
 One JSON Schema file per data type from your inventory, checked into version control and

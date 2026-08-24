@@ -67,7 +67,7 @@ or the situation changes massively in the future, it's always possible to add a 
 and migrate away from the old one - or keep both and explain when to use each one.  For example
 if your original playlist endpoint and data model merged listen counts and likes from too many
 other tables to operate well at scale, your new playlist endpoint could be `playlists-quick`
-and rate limit the full/slow one to align user motiviations.
+and rate limit the full/slow one to align user motivations.
 
 
 ## Output of this step

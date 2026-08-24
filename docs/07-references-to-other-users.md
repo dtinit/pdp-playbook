@@ -7,13 +7,12 @@ that gets decided: not dumped in wholesale, and not silently filtered out either
 
 ## Two different problems, two different fixes
 
-These get conflated but need different handling:
+These need different handling:
 
 - **Another person's identifier** inside the requesting user's own
   record — a commenter's name on a note the user owns, a sender's identity on a message the
   user received.
-- **Content genuinely co-owned by multiple users** — a collaborative playlist, a shared
-  album — where "who owns this" doesn't reduce to one person in the first place.
+- **Shared Content** — a collaborative playlist, a shared album
 
 ## Referencing another person without exporting their profile
 
@@ -30,37 +29,52 @@ whatever your service internally knows about the other party. Account status, co
 anything not already visible to the requesting user through normal use has no reason to appear
 here.
 
-## Modeling joint ownership
+## Shared resources and joint ownership
 
-For genuinely shared resources you may need to adapt job 6's
-access-control query filters against: "is this user a member of this resource," not "is this
-user *the* owner."
+Truly shared resources are probably pretty rare in personal data.  Regulations that 
+offer users the right to delete _their_ personal data may reinforce this, because
+now companies need a way to identify exactly what to include in these deletion requests.
 
-## Decide inclusion, don't default to exclusion
+Even when resources aren't truly shared-ownership, perhaps users ought to be allowed to 
+export something they use or contribute to.  If the API doesn't allow that access, users
+will lack functionality or hack it through GUI or other means.  Consider these use cases
+where the user really ought to be able to export a resource that is technically owned
+by the resource creator:
+
+ * My favourite playlists are some that friends created and technically own.  
+ * I'm invited to contribute photos of friends and family to event-centric albums.
+ * Family calendar created by my spouse
 
 Silently dropping a shared playlist from someone's export because it's "not 100% theirs"
-produces an incomplete, confusing result — someone who spent years curating a shared playlist
-reasonably expects it in their data. Default toward including anything the requesting user
+produces an incomplete, confusing result. Default toward including anything the requesting user
 actually holds a stake in, handling the other-person parts with the reference pattern above,
 rather than leaving the whole thing out reflexively.
 
+Private group chats are probably the most common shared-ownership resource.  The whole group 
+chat should be exported, not just the user's own messages devoid of context, even if the 
+"owner" of the group chat is not the person asking for a personal data export.
+
 ## How far to go?
 
-It can feel wrong to allow "personal data" access to community resources like forum messages,
-but can be both useful and consistent with your service's terms and Web functionality.
-Rather than read regulations narrowly as only requiring access to the user's own messages
-on a forum, which would lead to a very fragmented view of the overall conversation, consider
-allowing API access to what the user currently has Web view access to anyway.  Your users may
+Consider forum messages.  Compared to group chats, the membership is pretty loose.  
+A thread may be started by one person but continued by many 
+others.  The thread or topic presentation may center the original posting and present
+the rest as comments.  Should a user be able to export... 
+
+ * Only the forum messages that they posted, and only their own comments, out of context
+ * All comments, but only on the forum messages they posted
+ * Posts and comments on any thread they contributed to
+
+As long as you're building an API around exports, being inclusive here
+can be both useful and consistent with your service's terms and Web functionality.
+Consider unifying personal data access to meet compliance requirements with useful
+API access to what the user currently has Web view access to anyway.  Your users may
 be grateful, especially those who need accessible forum reading software or
 those who participate on multiple forums and have trouble tracking them all.  
 
-That said, there are use cases for the user exporting ONLY their own messages even from
-forums and comment threads. 
-
 ## Frozen or living references
 
-Some edge cases are worth deciding on purpose rather than by accident.  Consider a 
-five-year-old forum topic or comment thread.
+Some edge cases around refering to people are worth deciding on purpose rather than by accident. Consider a five-year-old forum topic or comment thread.
 
 - If a participating user has deleted their account or blocked the requester since they
   originally contributed, an export of an

@@ -71,10 +71,10 @@ this playbook assumes that the reader already knows, can research, or can delega
 10. [Use OAuth for authorization of data access, with limited scopes](docs/10-oauth.md)
 11. [Log grants and data access requests](docs/11-logging-access.md)
 12. [Publish documentation](docs/12-documentation.md)
-13. Design GUI elements (NOTE add export access for free using API)
-14. Plan for cloud deployment/ops
-15. Support API discovery (including data schemas and OAuth scopes)
-16. Plan for the future with a schema evolution strategy (NOTE add tests to expose gaps)
+13. [Design GUI elements](docs/13-gui-design.md)
+14. [Plan for cloud deployment/ops](docs/14-cloud-deployment.md)
+15. [Support API discovery (including data schemas and OAuth scopes)](docs/15-api-discovery.md)
+16. [Plan for the future with a schema evolution strategy](docs/16-schema-evolution.md)
 
 
 ## Meeting regulatory requirements

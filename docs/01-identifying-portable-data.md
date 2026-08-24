@@ -25,7 +25,7 @@ in your data model into one of three compliance categories:
 If you're unsure which category something falls in, ask: "did this exist because the user acted,
 or because we analyzed the user?"  Data from analyzing the user goes into the inferred/derived
 data category.
-s
+
 ## Examples
 
 | Service type | Provided | Observed | Inferred (exclude) |

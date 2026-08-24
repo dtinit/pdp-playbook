@@ -143,5 +143,5 @@ project where the survey above found something, added fresh where it didn't. The
 and mapper get wired into your build or test suite now, so any response can be checked against
 its [job 3](03-json-schema.md) schema before it ships — which is what
 [job 4](04-hooking-storage-into-api.md) will build on to connect these to real storage. The
-API-key, rate-limiting, OAuth, and pagination picks wait until [job 8](08-pagination.md),
-[job 9](09-api-keys.md), and [job 10](10-oauth.md) respectively.
+pagination pick waits until [job 8](08-pagination.md); the API-key and rate-limiting picks
+wait until [job 9](09-api-keys.md); and the OAuth pick waits until [job 10](10-oauth.md).

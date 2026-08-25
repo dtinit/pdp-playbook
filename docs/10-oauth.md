@@ -25,6 +25,39 @@ even though it's not yet the universal default third-party developers will assum
 current OAuth libraries support PKCE alongside the standard flow, so enabling it is additive,
 not a separate implementation.
 
+## Local software — including LLM agents running on the user's own device
+
+A locally-run AI agent that a user wants to give access to their own data is not a new case:
+it's the same public-client problem as the desktop sync tool and CLI above, and the same
+Authorization Code + PKCE flow answers it. The thing worth stating plainly, because it's the
+whole reason to insist on this rather than take a shortcut: the user should never hand the
+agent their actual account password, and this API has no path that would even accept one if
+they tried — [job 6](06-access-control.md) resolves identity from a token, never a password,
+so there is no backdoor for a "just log in as me" script to use instead. An agent that wants
+access goes through the same consent screen as any other third party and gets the same scoped,
+revocable token — nothing more, regardless of how much the user trusts it.
+
+The practical mechanism for an agent that can't embed a browser or receive a normal web
+redirect is the one already standardized for exactly this in
+[RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html): the agent opens the user's actual
+system browser to your real login/consent page — where the user authenticates directly with
+your service, never through the agent — and briefly listens on a loopback address
+(`http://127.0.0.1:<port>/callback`) to receive the redirected authorization code once the user
+approves. This is the same pattern behind `gh auth login`, `gcloud auth login`, and similar
+CLI tools, so it's a familiar shape to implement and to explain to users.
+
+For an agent that can't open a browser or bind a local port at all — running headless, or on a
+device with no display — the
+[Device Authorization Grant (RFC 8628)](https://www.rfc-editor.org/rfc/rfc8628) is the
+fallback: the agent displays a short code and a URL, the user opens that URL on any other
+device (their phone, say) to approve access, and the agent polls until the grant completes.
+
+If the OAuth flow for local software is not feasible for your service, a user-specific 
+API key is a reasonable hack.  This violates the normal ideal where the API key does not 
+actually grant any access, but is very narrow; a *personal API key* grants access 
+(probably read-only) to exactly one account.  Then the user can configure that API key 
+into their agent or software.
+
 ## Scopes, one per data type
 
 Define scopes at the same granularity as the [job 3](03-json-schema.md) schemas and
@@ -94,6 +127,13 @@ lighter `@node-oauth/oauth2-server` for bare OAuth2 without an OIDC identity lay
 and `django-oauth-toolkit` on Django. All three implement the Authorization Code flow, PKCE,
 and scope handling out of the box — this job is about how to configure them, not building an
 authorization server from scratch.
+
+One configuration detail worth checking specifically for the local-agent case above: RFC 8252
+requires an authorization server to treat the port in a loopback redirect URI
+(`http://127.0.0.1:<port>/...`) as variable, since a native agent picks an ephemeral port at
+launch. A server that naively exact-matches the whole registered redirect URI, port included,
+will reject every one of these logins — confirm the library allows loopback redirects to vary
+by port before assuming this case is handled.
 
 ## Output of this step
 

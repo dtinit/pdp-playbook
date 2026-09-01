@@ -26,12 +26,14 @@ result should also have good data security, ops, resiliency and scaling characte
 
 ## Who this playbook is for
 
-Most online services and platforms that host personal data do so almost as a side-effect of 
-providing their main value.  One of my long-term favourite sites is Ravelry, where the goal of 
-collecting data about knitting patterns and yarn led to collecting personal data about 
-individuals' knitting projects and ratings of patterns and yarn.  Then when Ravelry's 
-community turned out to have engagement power, knitters' post history became another
-important part of personal data. 
+This playbook is for cloud services hosting personal data.
+Most such services have personal data almost as a side-effect of
+providing their main value.  As an example, Ravelry (one of my favourite sites) was
+collecting data about knitting patterns and yarn, which led to collecting personal data about
+knitters' projects and their ratings of patterns and yarn.  As Ravelry's
+community grew, knitters' post history became another important type of
+personal data.  How should a service like Ravelry expose all this
+personal data for 3rd party acces and portability?
 
 Other examples:
 

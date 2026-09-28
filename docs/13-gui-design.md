@@ -1,13 +1,13 @@
 # Design GUI elements
 
-Several earlier jobs already left work for this one: [job 10](10-oauth.md) specified a consent
+Several earlier jobs already left work for this one: [job 10](10-oauth.md) specified an authorization
 screen and revocation, but not who builds it; [job 11](11-logging-access.md) built a grant log
 specifically so a screen here could read from it. [Job 9](09-api-keys.md) assumed a developer could rotate a key "without needing
 to file a support request," which requires some UI to exist for that to be true.
 
 ## Two audiences, two surfaces
 
-- **End users** — a consent screen, a connected-apps/manage-access page, and (per the note
+- **End users** — an authorization screen, a connected-apps/manage-access page, and (per the note
   below) self-service export.
 - **Third-party developers** — a place to register a client, get its first
   [API key](09-api-keys.md) or [OAuth](10-oauth.md) client credentials, and rotate or revoke
@@ -17,7 +17,7 @@ to file a support request," which requires some UI to exist for that to be true.
 
 Now is the time to capitalize on some good preparation.  Many of the decisions that
 go into a good personal data export that your users can load into other software
-or even use on their own have already been made.  Some of the code can even be 
+or even use on their own have already been made.  Some of the code can even be
 re-used.
 
 "Download my data" buttons are required in some jurisdictions, and everything
@@ -50,7 +50,7 @@ A couple of things follow from taking this seriously:
   JSON file although the page size might default to being rather large, such that only exports
   larger than 1MB actually break up into pages.  Exporting pages of < 1MB rather than a single
   5MB personal data archive may be much better performance.  Figure out your own Goldilocks
-  size.  
+  size.
 - **Keep JSON formatting.** Don't underestimate users, or the software that may be helping
   them! Machine-readable data is valuable. If an HTML version of the export is also desired,
   it can be achieved with different templates applied to the same data from the same object
@@ -89,9 +89,9 @@ Transfer-Encoding: chunked
 place: each page is a small, already-tested query, not one enormous query trying to
 materialize an entire history at once.
 
-## Consent, connected apps, and revocation
+## Authorization, connected apps, and revocation
 
-The consent screen's content was already specified in [job 10](10-oauth.md): plain-language
+The authorization screen's content was already specified in [job 10](10-oauth.md): plain-language
 scope descriptions, the requesting app's identity, partial-scope approval where feasible. This
 is where it actually gets built.  If privacy is a worry, consider adding filters that
 the user can choose, such as "only data from the last month/year" or "filter out document
@@ -110,7 +110,7 @@ same kind of call.
 
 ## A minimal developer console
 
-Job 9's promise that a developer can rotate a key themselves, and job 10's consent screen
+Job 9's promise that a developer can rotate a key themselves, and job 10's authorization screen
 showing "whatever the app registered as its display name," both assume a registration flow
 exists somewhere. This doesn't need to be elaborate: a form to register an app (name, and a
 redirect URI for job 10's flow), a page that shows its first API key or client credentials
@@ -119,7 +119,7 @@ makes jobs 9 and 10's self-service claims actually true rather than aspirational
 
 ## Output of this step
 
-Consent, connected-apps/revocation, and self-service export screens for end users, and a
+Authorization, connected-apps/revocation, and self-service export screens for end users, and a
 minimal registration/rotation console for developers. The export screen in particular is built
 as a client of the same [job 3](03-json-schema.md)/[job 5](05-choosing-endpoints.md)/
 [job 8](08-pagination.md) machinery the rest of this playbook produced, not a second

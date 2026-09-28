@@ -1,16 +1,16 @@
 
 # Personal Data Portability Playbook - PDP Playbook
 
-This project provides a playbook for implementing personal data portability.  It's intended for services that host personal data of some kind, and are unsure 
-what approach to take to meet regulatory requirements, to provide data access that works for users and their 3rd-party tools, and to keep their effort and
+This project provides a playbook for implementing personal data portability.  It's intended for services that host personal data of some kind, and are unsure
+what approach to take to meet regulatory requirements, to provide data access that works for users and their third-party tools, and to keep their effort and
 maintenance costs low.
 
-We're not compliance lawyers, so this isn't legal compliance advice! It's a resource to make 
-compliance simpler if this basic approach satisfies your compliance requirements. 
+We're not compliance lawyers, so this isn't legal compliance advice! It's a resource to make
+compliance simpler if this basic approach satisfies your compliance requirements.
 
 ## Basic Approach
 
-Our basic approach here is to help you build a HTTP+OAuth+JSON API quickly and efficiently.  A REST style is used due to its overwhelming familiarity and existence of mature and scalable tools.  The 
+Our basic approach here is to help you build a HTTP+OAuth+JSON API quickly and efficiently.  A REST style is used due to its overwhelming familiarity and existence of mature and scalable tools.  The
 result should also have good data security, ops, resiliency and scaling characteristics.
 
 ```
@@ -26,14 +26,23 @@ result should also have good data security, ops, resiliency and scaling characte
 
 ## Who this playbook is for
 
-This playbook is for cloud services hosting personal data.
-Most such services have personal data almost as a side-effect of
-providing their main value.  As an example, Ravelry (one of my favourite sites) was
-collecting data about knitting patterns and yarn, which led to collecting personal data about
-knitters' projects and their ratings of patterns and yarn.  As Ravelry's
+This playbook is for online services, such as those with a website or app,
+that store their users' personal data in the cloud. It might be most
+immediately useful for organisations assessing the technical feasibility of
+implementing user-initiated direct transfers. In time, it might become
+directly relevant for organisations brought into scope of existing or new
+regulatory requirements or data sharing initiatives. Equally, the playbook may
+be a useful resource for policy makers considering the design or potential
+implications of introducing such requirements.
+
+Many such services do other things besides hold personal data.
+As an example, Ravelry (one of my favourite sites) was initially
+collecting community data about knitting patterns and yarn,
+and that led to collecting personal data about
+knitters' projects and ratings of patterns and yarn.  As Ravelry's
 community grew, knitters' post history became another important type of
 personal data.  How should a service like Ravelry expose all this
-personal data for 3rd party acces and portability?
+personal data for third-party access and portability?
 
 Other examples:
 
@@ -45,14 +54,17 @@ Other examples:
 | AI chat services | Chat history |
 | Map services | Route history, favourites |
 
-Some kinds of services are missing from this list.  Email and calendar servers should look to standards rather than follow this playbook.  
+These are illustrative examples and are not intended to be exhaustive.  Email and calendar servers should look to standards rather than follow this playbook.
+
+Throughout, *third party* means the app or service a user authorizes to receive
+their data, which the data portability ecosystem calls a *data destination*.
 
 ## How to use this playbook
 
 There are two major ways to use this playbook
 
 1. Read it and see what ideas and pointers may be helpful. Maybe use the playbook to fill in your project plan.
-2. Point your AI coding agent at this playbook and ask it to follow the playbook until you're ready to deploy 
+2. Point your AI coding agent at this playbook and ask it to follow the playbook until you're ready to deploy
 
 Because this playbook is documenting common and widespread practices for exposing data,
 there are many examples in open source and published APIs.
@@ -81,17 +93,31 @@ this playbook assumes that the reader already knows, can research, or can delega
 
 ## Meeting regulatory requirements
 
-This approach is designed to satisfy the data portability requirements in:
+Some Internet regulations include data portability requirements.
 
 - **GDPR Article 20** — the right to receive personal data in a structured, commonly used, machine-readable format, and to have it transmitted to another controller.
-- **EU Digital Markets Act (DMA)** — Article 6(9), which requires gatekeepers to give end users and the third parties they authorize **continuous and real-time** access to data generated through use of the service.
+- **EU Digital Markets Act (DMA)** — [Article 6(9)](https://eur-lex.europa.eu/legal-content/EN/TXT/?uri=CELEX:32022R1925#006.009), which requires gatekeepers to give end users and the third parties they authorize **continuous and real-time** access to data generated through use of the service.
 - **UK Data Protection Act 2018** — which carries the UK GDPR's equivalent portability right post-Brexit.
 
-Two words in the DMA text, and our interpretation thereof drive specific design choices above:
+There are two terms in the DMA text in particular that have driven specific
+design choices in this playbook:
 
-**Continuous** doesn't require a streaming or push protocol.  It means the user, or a 3rd party they've authorized, can come back and pull newly created data whenever they want, not just receive a one-time export. Using OAuth and pagination or cursors is powerful and flexible.
+*Continuous* personal data access doesn't necessarily require a streaming or
+ push protocol. On a practical basis, we interpret it to mean that the user,
+ or a third party they've authorized, can come back and pull newly created data
+ on a regular ongoing basis, rather than just receiving a one-time export.
+ Using OAuth and pagination or cursors is powerful and flexible.
 
-**Real-time** also doesn't require a streaming or push protocol. As long as the API can access data as soon as it's saved in your service, the API can give access to real-time data with latency that satisfies most use cases.
+*Real-time* also doesn't necessarily require a streaming or push protocol. As
+long as the API can access data as soon as it's saved in your service, the
+API can give access to real-time data with latency that satisfies most use
+cases.
 
-It's also possible to augment this API with WebSockets or another streaming or push-based mechanism,
-but this RESTful approach is still where to start.
+When determining the ideal speed and frequency of transfers, we encourage data
+portability implementers to consider the parameters that will be most useful
+for the potential downstream uses of the data by users and third parties.
+Open Data Institute research on this topic defined this approach
+as ["Functional Real-Time"](https://dtinit.org/assets/DefiningRealtimeTCW.pdf).
+
+It's also possible to augment this API with WebSockets or another streaming or
+push-based mechanism, but this RESTful approach is still where to start.

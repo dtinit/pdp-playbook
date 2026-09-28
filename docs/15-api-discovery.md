@@ -5,7 +5,7 @@ endpoints, [job 8](08-pagination.md)'s pagination choices, [job 9](09-api-keys.m
 auth, [job 10](10-oauth.md)'s scopes. This job is where all of it gets published as a document
 a client can fetch and act on, rather than something a developer has to read and hand-translate
 into code.  API discovery is optional but it can really help with usage, especially
-with AI agents.  
+with AI agents.
 
 ## One document, two standards — not a bespoke format
 
@@ -38,7 +38,7 @@ know how to consume these resources, which is the entire point of using standard
   one generic pagination handler across endpoints that don't all use the same approach.
 - **Security schemes** — an `apiKey` scheme for [job 9](09-api-keys.md), and an `oauth2` scheme
   with a `scopes` map for [job 10](10-oauth.md). Pull the scope descriptions from the same
-  plain-language wording used on job 10's consent screen — [job 12](12-documentation.md)
+  plain-language wording used on job 10's authorization screen — [job 12](12-documentation.md)
   already said to reuse that wording verbatim in the human docs; this is the third place it
   should appear unchanged, not rewritten again.
 
@@ -57,7 +57,7 @@ the same API that can quietly disagree — that risk is highest here, since this
 what other software parses, not a forgiving human reader. Generate it from the same
 route/schema definitions [job 2](02-libraries-frameworks.md) already chose libraries for:
 `drf-spectacular` derives an OpenAPI document from a Django REST Framework project directly;
-on Node, `tsoa` generates one from TypeScript controllers and models.  
+on Node, `tsoa` generates one from TypeScript controllers and models.
 
 ## Don't let generation stand in for job 12's documentation
 

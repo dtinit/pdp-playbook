@@ -30,9 +30,9 @@ on the account owner's behalf — see [job 10](10-oauth.md).
 
 The index file job 3 said collections need (albums, playlists, anything with per-item
 metadata) *is* the collection endpoint's response body — you're not building a second
-representation. For content objects backed by a blob (a photo, a video), you usually 
+representation. For content objects backed by a blob (a photo, a video), you usually
 don't proxy the raw bytes through this JSON endpoint unless the content is reliably small
-like a profile thumbnail.  
+like a profile thumbnail.
 The default approach is to return the metadata/index and let it point at the blob
 directly, ideally via a short-lived signed URL. That keeps every endpoint here uniformly JSON
 and leaves you free to change blob storage or add a CDN later without touching the API shape.
@@ -60,7 +60,7 @@ your own server instead of a signed storage URL, confirm your server does too.
 
 Job 3 was deliberate about keeping schema versioning in the schema's `$id`, not by changing
 the whole API out from under the user by moving from `/api/v1/playlists` to `/api/v2/playlists`.
-Keep the endpoint simply `playlists` for now and extend the schema in place whenever possible.  
+Keep the endpoint simply `playlists` for now and extend the schema in place whenever possible.
 
 If you make a real mistake defining endpoints
 or the situation changes massively in the future, it's always possible to add a new endpoint

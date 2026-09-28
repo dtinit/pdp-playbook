@@ -1,7 +1,7 @@
 # Identifying what counts as portable data
 
 Before you write any API code, you need an inventory: which parts of your data model are
-"portable data" under the regulations this playbook targets, and which aren't. Get this step
+"portable data" under the regulations this playbook is relevant for, and which aren't. Get this step
 wrong and you'll either over-expose data you shouldn't, or under-deliver and miss the compliance
 bar. This is the foundation the [JSON Schema](03-json-schema.md) work and API design build on.
 
@@ -33,7 +33,7 @@ data category.
 | Music streaming | Playlists | Listen history | "Taste vector" embeddings |
 | Video streaming | Watch lists | Watch history | Recommendation scores |
 | Note-taking | Notes, folders | Edit timestamps | Auto-generated tags/summaries* |
-| AI chat | — | Chat history | Internal moderation flags |
+| AI chat | Account settings | Chat history, both prompts and responses | Internal moderation flags |
 | Maps | Saved favourites | Route history | Predicted-destination models |
 
 \* Some derived fields are borderline — a summary the user actually sees and relies on may be

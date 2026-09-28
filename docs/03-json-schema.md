@@ -1,11 +1,11 @@
 # How to use JSON Schema to define data formats
 
 Once you've [inventoried your portable data](01-identifying-portable-data.md) and broken it
-into sensible data types, each data type needs a schema. JSON and JSON Schema are 
-the right tools here: JSON is 
+into sensible data types, each data type needs a schema. JSON and JSON Schema are
+the right tools here: JSON is
 machine-readable (satisfying the letter of GDPR Article 20's "structured, commonly used,
 machine-readable format" requirement), JSON Schema has mature validators in every language, and is
-self-describing enough that a 3rd-party tool can consume your data without extra docs.
+self-describing enough that a third-party tool can consume your data without extra docs.
 
 ## One schema per data type, not one giant schema
 
@@ -19,8 +19,8 @@ few small, focused schemas beat one sprawling one:
 - **Metadata attached to an object** — like count, play count — modeled as properties on the
   object schema it belongs to, per the "keep metadata with objects" principle from the
   inventory step, not as a separate free-floating export.
-- **Collections or listings** - when content or data objects are organized into collections of
-  some kind, like photos in albums, some kind of index file is needed to describe the 
+- **Collections or listings** - when content or data objects are organized into collections,
+  like photos in albums, some kind of index file is needed to describe the
   contents of each collection.  If there's per-item metadata that doesn't fit in the blob
   file format, the collection information is an even better place to provide that metadata.
 
@@ -35,31 +35,31 @@ API:
  * Endpoint/model for categories, to map from codes like '13' to words like 'baseball'
  * Endpoint/model for venues, to map from ids like 'b027eefba7f0' to venue name and address
  * Endpoint/model for list of tickets available for the event...
- 
+
 The overall API was hard to maintain and hard to use.  It would have been very fast to cache
-the category names and replace category codes (the internal data storage) with category names. 
-It would have been a simple JOIN to join the backend venue table into the event table 
-and save the user another round trip fetching the venue to even know what city it's in.  
+the category names and replace category codes (the internal data storage) with category names.
+It would have been a simple JOIN to join the backend venue table into the event table
+and save the user another round trip fetching the venue to even know what city it's in.
 Worse, this ties the external API directly to internal implementation choices and internal
-codes.  
+codes.
 
 Should consolidating to better meet user needs and improve maintainability go so far as to
 join the list of tickets into the event response and include ticket data in the event data model?
 Now we're getting into a judgement call
 that requires knowing how many tickets there are likely to be, how fast the query will be,
-and how often the user querying the API wants to know about tickets.  
+and how often the user querying the API wants to know about tickets.
 
 When making judgement calls for your own data models, consider a few principles
  * It's OK to denormalize your data for outside consumption.  Heavily normalized data
    optimizes for internal correctness. Denormalizing (like joining in the venue name and
-   address to the event in the example above) can be done in the API to make the API 
+   address to the event in the example above) can be done in the API to make the API
    more usable and scalable without internal correctness suffering.
  * Any time an id or code appears in the external data model that can't provide any
-   information without another API hit, 
-   consider whether this is an internal code that should be replaced with 
-   the actual information.  Sometimes you expose the id or code anyway - chat logs 
-   might use an account ID to make sure to uniquely identify the other party in the log - 
-   but be aware that this is a long-term commitment. 
+   information without another API hit,
+   consider whether this is an internal code that should be replaced with
+   the actual information.  Sometimes you expose the id or code anyway - chat logs
+   might use an account ID to make sure to uniquely identify the other party in the log -
+   but be aware that this is a long-term commitment.
 
 ## Anatomy of a schema
 
@@ -113,8 +113,9 @@ now, because retrofitting it later breaks anyone who's already integrated.
 
 ## Where schemas live
 
-Serve schemas at the stable URLs used in their `$id`s, and list them somewhere discoverable —
-this feeds directly into [job 15, API discovery](15-api-discovery.md), where clients need to
+Serve schemas at the stable URLs used in their `$id`s, and list them somewhere discoverable
+such as [Schemas.Pub](https://schemas.pub).
+This feeds directly into [job 15, API discovery](15-api-discovery.md), where clients need to
 find both your endpoints and the schemas those endpoints return.
 
 If you're already producing (or planning to produce) an OpenAPI document for

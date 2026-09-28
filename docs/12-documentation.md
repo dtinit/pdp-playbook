@@ -21,7 +21,7 @@ machines; this job makes it understandable by people.
   the same [job 3](03-json-schema.md) schemas directly, and tools like Swagger UI or Redoc
   turn it into a browsable, interactive reference for free.
 - **Scopes reference** — the same plain-language descriptions used on
-  [job 10](10-oauth.md)'s consent screen, reused verbatim rather than redescribed. If the
+  [job 10](10-oauth.md)'s authorization screen, reused verbatim rather than redescribed. If the
   wording drifts between what a user approves and what a developer reads, one of them is
   wrong.
 - **Rate limits** — the actual numbers from [job 9](09-api-keys.md), and what a `429` response

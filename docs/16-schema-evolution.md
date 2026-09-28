@@ -12,7 +12,7 @@ integrator reports one.
   path [job 3](03-json-schema.md) already described: ship it in place, no version bump.
 - **Transitional** - while preparing to remove or rename fields, or improve their format
   (e.g. transitioning to a time field with timezone instead of one without), it's often
-  possible to keep the field that existing clients may depend on.  
+  possible to keep the field that existing clients may depend on.
 - **Breaking** — renaming or removing a field that clients may depend on, or changing its
   format. This is exactly the case [job 3](03-json-schema.md) said to be *prepared* for, not
   to expect often.
@@ -20,7 +20,7 @@ integrator reports one.
 Additive and transitional changes can update the schema to keep informing clients what
 to expect (and keep checking your own code against your interface contract).
 
-When a breaking change is genuinely preferable, define a new `$id` for a new schema.  
+When a breaking change is genuinely preferable, define a new `$id` for a new schema.
 Try to keep the old version around unchanged rather than immediately replaced. List both
 listed in [job 15](15-api-discovery.md)'s discovery document, and communicate a
 timeline for the old version to be retired.

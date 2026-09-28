@@ -8,8 +8,8 @@ activity/history endpoints [job 1](01-identifying-portable-data.md) and
 [job 3](03-json-schema.md) both called out as unbounded, with what each option costs and buys.
 
 While breaking up large collections, consider how they're ordered.
-Ordering by date starting from most recent is often the most useful, because 
-the user or their software may be most interested in recent data.  
+Ordering by date starting from most recent is often the most useful, because
+the user or their software may be most interested in recent data.
 
 ## Option 1: do nothing
 

@@ -10,10 +10,10 @@ and it shouldn't be treated as one.
 
 Adding API keys early is an important future-proofing step.  You may not need to do more than
 simply require a valid API key with requests on initial deploy.  If overuse of the API
-_becomes_ a problem, rate limiting by API key can be added without breaking API customers.  
+_becomes_ a problem, rate limiting by API key can be added without breaking API customers.
 But if you don't require API keys from the start, they're hard to add later.
 
-Once you get API keys they can be used for: 
+Once you get API keys they can be used for:
 
 - **Rate limiting** — cap how hard any one client can hit the API, independent of which user
   account it's acting on behalf of.

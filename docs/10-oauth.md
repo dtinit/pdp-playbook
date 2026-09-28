@@ -9,7 +9,7 @@ data" into "data I've explicitly let this app see."
 ## Which flow
 
 Use the **Authorization Code flow** as the default — it's the standard, widely-supported OAuth
-flow for exactly this situation: delegated, user-present consent, where a human is actively
+flow for exactly this situation: delegated, user-present authorization, where a human is actively
 agreeing to let a specific third-party app see specific data. That rules out the Client
 Credentials grant (no user in the loop at all) and the Resource Owner Password grant (the
 third party would see the user's actual account password, which is exactly the failure mode
@@ -34,13 +34,13 @@ whole reason to insist on this rather than take a shortcut: the user should neve
 agent their actual account password, and this API has no path that would even accept one if
 they tried — [job 6](06-access-control.md) resolves identity from a token, never a password,
 so there is no backdoor for a "just log in as me" script to use instead. An agent that wants
-access goes through the same consent screen as any other third party and gets the same scoped,
+access goes through the same authorization screen as any other third party and gets the same scoped,
 revocable token — nothing more, regardless of how much the user trusts it.
 
 The practical mechanism for an agent that can't embed a browser or receive a normal web
 redirect is the one already standardized for exactly this in
 [RFC 8252](https://www.rfc-editor.org/rfc/rfc8252.html): the agent opens the user's actual
-system browser to your real login/consent page — where the user authenticates directly with
+system browser to your real login/authorization page — where the user authenticates directly with
 your service, never through the agent — and briefly listens on a loopback address
 (`http://127.0.0.1:<port>/callback`) to receive the redirected authorization code once the user
 approves. This is the same pattern behind `gh auth login`, `gcloud auth login`, and similar
@@ -52,10 +52,10 @@ device with no display — the
 fallback: the agent displays a short code and a URL, the user opens that URL on any other
 device (their phone, say) to approve access, and the agent polls until the grant completes.
 
-If the OAuth flow for local software is not feasible for your service, a user-specific 
-API key is a reasonable hack.  This violates the normal ideal where the API key does not 
-actually grant any access, but is very narrow; a *personal API key* grants access 
-(probably read-only) to exactly one account.  Then the user can configure that API key 
+If the OAuth flow for local software is not feasible for your service, a user-specific
+API key is a reasonable hack.  This violates the normal ideal where the API key does not
+actually grant any access, but is very narrow; a *personal API key* grants access
+(probably read-only) to exactly one account.  Then the user can configure that API key
 into their agent or software.
 
 ## Scopes, one per data type
@@ -66,12 +66,12 @@ one all-or-nothing `read:everything` scope. A user exporting their playlists to 
 music-migration tool shouldn't have to also hand over their listen history just because the
 API only offers one lever.
 
-This isn't just good practice, it's what makes the consent screen honest: a user can only make
+This isn't just good practice, it's what makes the authorization screen honest: a user can only make
 a real choice about what they're sharing if the scopes on offer actually correspond to
 distinct, meaningful pieces of their data. A scope list that mirrors the job 1 inventory's data
 types is usually the right shape.
 
-## The consent screen
+## The authorization screen
 
 Show scopes in plain language, tied to what the user actually recognizes — "your playlists,"
 not `read:playlists` — and show which third-party app is asking, using whatever the app
@@ -79,20 +79,28 @@ registered as its display name. Let the user approve a subset of the requested s
 that's feasible, rather than an all-or-nothing accept; if the app claims it needs a scope, it
 should say what it's for, and the user should be able to say no to what it doesn't need.
 
-## Issuing client_id and client_secret
+## Establishing trust with data destinations
 
-If the user data is reasonably private, then the 3rd party requesting access needs to be
-confirmed.  A company called "XYZ Photos" asks for access to a user's photo album.  Are
-they a legitimate company?  If they are a legitimate company, what stops an attacker
-from pretending to be XYZ Photos? `client_id` and `client_secret` are shared between
-an OAuth authorization server and client to solve the latter problem.
+If the user data is reasonably private, you may wish to confirm that the third
+party asking for access — the *data destination*, in data portability terms — is who
+they say they are. Say a company
+called "XYZ Photos" asks for access to a user's photo album. Is it a real
+company, and should your users trust it with their data?
 
-The [Data Trust Registry](https://www.dt-reg.org) (DTR) provides a robust solution to the first
-problem, by taking on the task of verifying a data portability ecosystem participant once for
-the whole ecosystem.  But you still need to be sure you're issuing the `client_id` to the real
-company listed in the DTR. Domain verification is the current widely
-adopted solution for that.  Also, the DTR ecosystem is tracking and adopting technology
-solutions to make this whole `client_id`/`client_secret` and API key sharing go easier.
+The [Data Trust Registry](https://dt-reg.org) (DTR) takes on this task. It verifies each
+data portability ecosystem participant for the whole ecosystem, so individual services
+don't each have to vet every destination themselves.  Query the DTR before issuing
+client credentials and when receiving data requests to make sure that the
+destination has not been withdrawn or suspended from the registry.
+
+## Issuing client credentials
+
+Knowing that XYZ Photos is legitimate doesn't stop an attacker from pretending to be XYZ
+Photos. The `client_id` and `client_secret` that the OAuth authorization server shares with
+the client solve that problem — but you still need to be sure you're issuing them to the real
+company listed in the DTR. Domain verification is the current widely adopted way to do that.
+The DTR ecosystem is also tracking and adopting technology to make sharing
+`client_id`/`client_secret` pairs and API keys easier.
 
 ## Token lifetimes and continuous access
 
@@ -140,6 +148,6 @@ by port before assuming this case is handled.
 An OAuth authorization server issuing short-lived, scoped access tokens via the Authorization
 Code flow (with PKCE available for public clients), with per-data-type scopes matching
 [job 3](03-json-schema.md)/[job 5](05-choosing-endpoints.md),
-a consent screen a user can actually make a decision from, and working revocation.
+an authorization screen a user can actually make a decision from, and working revocation.
 [Job 11](11-logging-access.md) logs every grant this issues, and
 [job 15's discovery document](15-api-discovery.md) publishes the scopes a client can request.

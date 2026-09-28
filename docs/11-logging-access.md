@@ -7,7 +7,7 @@ happened. There are two distinct logs here, not one, and they serve different pu
 
 ## Two logs, not one
 
-- **Grant log** — an append-only record of consent lifecycle events: a user granted a
+- **Grant log** — an append-only record of authorization lifecycle events: a user granted a
   specific client a specific set of [job 10](10-oauth.md) scopes, at what time; a grant was
   later revoked, by the user or an admin, at what time. This is the audit trail for "who did I
   say could see my data, and when did that change."
@@ -66,7 +66,7 @@ not that the mechanism is novel.
 
 ## Output of this step
 
-Two structured, access-controlled logs: a low-volume grant log recording every consent and
+Two structured, access-controlled logs: a low-volume grant log recording every authorization and
 revocation event from [job 10](10-oauth.md), and a request-scoped access log recording every
 identified access from [job 6](06-access-control.md) and [job 9](09-api-keys.md), both
 retained deliberately rather than by default. The grant log is also the data source

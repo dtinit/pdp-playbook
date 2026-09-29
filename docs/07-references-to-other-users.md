@@ -5,6 +5,10 @@ a shared playlist, a comment thread, a private message — and [job 5](05-choosi
 and [job 6](06-access-control.md) both punted on what to actually do about it. This is where
 that gets decided: not dumped in wholesale, and not silently filtered out either.
 
+This is a tricky topic to make general recommendations about.  This section in
+particular should not be considered compliance advice, but a starting point. Complex
+cases may require advice from experts in data protection and privacy regulations.
+
 ## Two different problems, two different fixes
 
 These need different handling:
@@ -31,17 +35,17 @@ here.
 
 ## Shared resources and joint ownership
 
-Truly shared resources are probably pretty rare in personal data.  Regulations that 
+Truly shared resources are probably pretty rare in personal data.  Regulations that
 offer users the right to delete _their_ personal data may reinforce this, because
 now companies need a way to identify exactly what to include in these deletion requests.
 
-Even when resources aren't truly shared-ownership, perhaps users ought to be allowed to 
+Even when resources aren't truly shared-ownership, perhaps users ought to be allowed to
 export something they use or contribute to.  If the API doesn't allow that access, users
 will lack functionality or hack it through GUI or other means.  Consider these use cases
 where the user really ought to be able to export a resource that is technically owned
 by the resource creator:
 
- * My favourite playlists are some that friends created and technically own.  
+ * My favourite playlists are some that friends created and technically own.
  * I'm invited to contribute photos of friends and family to event-centric albums.
  * Family calendar created by my spouse
 
@@ -50,16 +54,16 @@ produces an incomplete, confusing result. Default toward including anything the 
 actually holds a stake in, handling the other-person parts with the reference pattern above,
 rather than leaving the whole thing out reflexively.
 
-Private group chats are probably the most common shared-ownership resource.  The whole group 
-chat should be exported, not just the user's own messages devoid of context, even if the 
+Private group chats are probably the most common shared-ownership resource.  The whole group
+chat should be exported, not just the user's own messages devoid of context, even if the
 "owner" of the group chat is not the person asking for a personal data export.
 
 ## How far to go?
 
-Consider forum messages.  Compared to group chats, the membership is pretty loose.  
-A thread may be started by one person but continued by many 
+Consider forum messages.  Compared to group chats, the membership is pretty loose.
+A thread may be started by one person but continued by many
 others.  The thread or topic presentation may center the original posting and present
-the rest as comments.  Should a user be able to export... 
+the rest as comments.  Should a user be able to export...
 
  * Only the forum messages that they posted, and only their own comments, out of context
  * All comments, but only on the forum messages they posted
@@ -70,7 +74,7 @@ can be both useful and consistent with your service's terms and Web functionalit
 Consider unifying personal data access to meet compliance requirements with useful
 API access to what the user currently has Web view access to anyway.  Your users may
 be grateful, especially those who need accessible forum reading software or
-those who participate on multiple forums and have trouble tracking them all.  
+those who participate on multiple forums and have trouble tracking them all.
 
 ## Frozen or living references
 
@@ -89,8 +93,8 @@ Some edge cases around refering to people are worth deciding on purpose rather t
   thumbnail image may be the ones currently visible even looking at an old thread.
 
 Just be mindful of these cases, and note which approach is taken in internal storage
-and external views in the rest of your service, so that you can predict how this will 
-work in the API. 
+and external views in the rest of your service, so that you can predict how this will
+work in the API.
 
 ## Output of this step
 

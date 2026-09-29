@@ -1,7 +1,7 @@
 # Suggest some libraries and frameworks for the project
 
 This assumes you already have a web framework in place — Express or Fastify on Node, Django
-in Python, whatever the equivalent is elsewhere — and just need to add personal data 
+in Python, whatever the equivalent is elsewhere — and just need to add personal data
 portability. This job is just
 about which libraries to reach for when implementing the steps to come.
 
@@ -23,7 +23,7 @@ mandate to add them regardless of what's already there.
   tree, and grep for existing `validate(...)` or validator-class usage.
 - **Templating/transform** — search for existing serializer/DTO/presenter layers (DRF
   `Serializer` subclasses, GraphQL resolvers, an internal "view model" pattern) that may
-  already do the field-by-field mapping [job 4](04-hooking-storage-into-api.md) describes.  
+  already do the field-by-field mapping [job 4](04-hooking-storage-into-api.md) describes.
 - **API key management** — many services already issue API keys for something (internal
   tooling, a partner integration, rate limiting on a public endpoint). Check for an existing
   keys table or key-hashing/lookup middleware before building a second key system for

@@ -7,7 +7,7 @@ account's data rather than just returning whatever it's asked for.
 
 This is structurally private, not just logically private!  An attacker trying to gain
 access to a private account simply cannot construct a URL to name that account's data
-and hope there's a gap in its protection.  
+and hope there's a gap in its protection.
 
 ## Resolve identity once, trust it everywhere
 
@@ -19,11 +19,15 @@ from a verified token or session, it's not identity, it's just a claim.
 Keep two things distinct, since they answer different questions:
 
 - **Who's calling** — the client/app making the request, identified by an API key
-  ([job 9](09-api-keys.md)). This is about rate limiting and defensibility, not ownership.
-- **Whose data** — the account whose consent an OAuth token represents
+  ([job 9](09-api-keys.md)) or OAuth `client_id`.
+  Identifying the caller is for rate limiting and defensibility, not data access permission.
+  Your role in verifying who's calling should be limited to ensuring that they're
+  not spoofing the user and can meet reasonable safety guardrails.  This decision
+  can be outsourced to the [Data Trust Registry](https://dt-reg.org).
+- **Whose data** — the account whose authorization an OAuth token represents
   ([job 10](10-oauth.md)). This is the identity every query in this job scopes to. A
-  third-party app can be "who's calling" while a user remains "whose data," and access
-  control cares about the latter.
+  third-party app can be "who's calling" while a user remains "whose data," and
+  user privacy requires the user's authorization.
 
 One pattern I like for resolving identity once is to put all the user authentication,
 session and token management in **decorators** (when using python).  For example, all

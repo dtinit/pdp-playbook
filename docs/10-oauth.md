@@ -17,6 +17,11 @@ OAuth exists to avoid). For a third-party service with its own server — the co
 the one every OAuth library supports out of the box — the standard flow with a confidential
 client secret is enough.
 
+Note that the authorization flow handles *both* third-party Web services and AI agents that the
+user accesses on the cloud via a third-party service.  To your API, an online agent is merely
+code being run by the service operating the agent; that service gets the user's data so that
+service should be authorized.
+
 Add **PKCE** on top when the third party is a public client that can't safely hold a secret —
 a desktop sync tool, a mobile app, a CLI. PKCE closes the authorization-code-interception gap
 that a client secret would otherwise cover, and it's worth supporting for exactly the kind of
@@ -25,10 +30,16 @@ even though it's not yet the universal default third-party developers will assum
 current OAuth libraries support PKCE alongside the standard flow, so enabling it is additive,
 not a separate implementation.
 
+Just like the third-party case handles both cloud-hosted AI agents and traditional services, the
+public client case handles both local AI agents and traditional clients.  Once more, they're
+indistinguishable to your API.  The distinction between client and local agent is blurry, as
+a harness around an AI agent may behave more like regular client app than like an unharnessed
+agent.
+
 ## Local software — including LLM agents running on the user's own device
 
-A locally-run AI agent that a user wants to give access to their own data is not a new case:
-it's the same public-client problem as the desktop sync tool and CLI above, and the same
+A locally-run AI agent that a user wants to give access to their own data is not a new case.
+It's the same public-client problem as the desktop sync tool and CLI above, and the same
 Authorization Code + PKCE flow answers it. The thing worth stating plainly, because it's the
 whole reason to insist on this rather than take a shortcut: the user should never hand the
 agent their actual account password, and this API has no path that would even accept one if

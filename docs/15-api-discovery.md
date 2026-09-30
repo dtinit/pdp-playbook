@@ -59,21 +59,33 @@ route/schema definitions [job 2](02-libraries-frameworks.md) already chose libra
 `drf-spectacular` derives an OpenAPI document from a Django REST Framework project directly;
 on Node, `tsoa` generates one from TypeScript controllers and models.
 
-## Don't let generation stand in for job 12's documentation
+## Don't let generated documentation replace high-level documentation
 
 Generating this document is not the same job as [job 12](12-documentation.md)'s documentation,
 and it's worth being explicit about the difference. A tool that reads your schema and prints
 "`Activity` is an `object` with the field `date`, which is a `datetime`" hasn't told an
 integrator anything the schema didn't already say — just in a more bloated, less
 machine-readable form. If that's genuinely all your documentation adds, integrators are better
-off reading the schema directly.
-
-Job 15's document already does the "what" better than any human-written page could, since it's
-actually machine-readable. Job 12 exists for what a schema can't say: how to actually walk a
+off reading the schema directly.  Higher-level documentation exists
+for what a schema can't say: how to actually walk a
 [job 8](08-pagination.md) cursor, what a [job 10](10-oauth.md) scope means for someone deciding
-whether to grant it, what to expect from a `429`. Autogenerating the reference is genuinely
-good — reach for `drf-spectacular` or `tsoa` above to keep it accurate — but don't let the ease
+whether to grant it, what to expect from a `429`. Autogenerating the reference documentation is
+good, but don't let the ease
 of that stand in for the prose only a person can write.
+
+## Consider offering MCP as a thin layer
+
+[Job 10](10-oauth.md) already described how to authorize AI agents that run either
+on the cloud or on the user's device.  This step goes further in supporting AI agent
+access to users' personal data, and suggests wrapping your API calls in an MCP layer
+that agents can figure out how to use.
+
+Keep that layer thin. Each MCP tool should map to an existing [job 5](05-choosing-endpoints.md)
+endpoint and return the same [job 3](03-json-schema.md) schemas, with no new business logic of
+its own. In many Web API frameworks, you may be able to wrap each View method or object
+for the regular API in an MCP view.  OAuth tokens and scopes (job 10) can be reused, since
+MCP's authorization spec is built on OAuth — and the RFC 8414 metadata document this chapter
+already publishes is one of the pieces MCP clients look for. 
 
 ## List your API in the Data Trust Registry
 

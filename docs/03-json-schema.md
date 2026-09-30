@@ -118,6 +118,11 @@ such as [Schemas.Pub](https://schemas.pub).
 This feeds directly into [job 15, API discovery](15-api-discovery.md), where clients need to
 find both your endpoints and the schemas those endpoints return.
 
+Registering schemas on Schemas.Pub requires an account and an API key. Your
+AI coding agent can finish the registration for you: Schemas.Pub runs an MCP server at
+`https://schemas.pub/mcp/`, documented at [schemas.pub/docs/mcp](https://schemas.pub/docs/mcp),
+both to search existing schemas and create or update your own.
+
 If you're already producing (or planning to produce) an OpenAPI document for
 [job 12](12-documentation.md)'s documentation or [job 15](15-api-discovery.md)'s discovery,
 note that OpenAPI 3.1 is fully compatible with JSON Schema draft 2020-12 — the same draft

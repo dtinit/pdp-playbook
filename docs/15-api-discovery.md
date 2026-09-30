@@ -75,10 +75,38 @@ whether to grant it, what to expect from a `429`. Autogenerating the reference i
 good — reach for `drf-spectacular` or `tsoa` above to keep it accurate — but don't let the ease
 of that stand in for the prose only a person can write.
 
+## List your API in the Data Trust Registry
+
+The [Data Trust Registry](https://dt-reg.org) (DTR) is the ecosystem registry
+where data destinations can *discover* your API.  It's the same registry that allows
+you to check that third parties accessing your API are trusted.  If onboarding or
+supporting your users involves fetching their data from other services in the ecosystem,
+you'll have even more reason to join as a destination as well as a source.
+
+To get listed:
+
+1. **Create an account** on the DTR site and start an application from
+   [Join the registry](https://dt-reg.org/apply-to-registry/). The Application Guide linked
+   from there lists the specific requirements for each step.
+2. **Start at the private, test-only level** while you're still building. This lets you test
+   transfers with other verified participants without a public listing, and gives you time to
+   pull together what a full application needs.
+3. **Apply for a trusted listing** when you're ready to go public. Expect to provide an
+   organisational identifier (such as an LEI or DUNS number), your country of jurisdiction,
+   and attestations about your data security practices and end-user authentication. If your
+   service holds sensitive content, the higher trust level also asks for evidence of regular
+   security audits, such as SOC 2.
+4. **Add your connection information** to your registry entry, so destinations can find this
+   job's OpenAPI and OAuth metadata documents.
+
+The DTR reviews listings annually and works with its members to
+iterate on requirements and technical choices in both trust and discovery/connection.
+
 
 ## Output of this step
 
 An OpenAPI document covering endpoints, schemas, pagination parameters, and security schemes,
 plus an RFC 8414 metadata document for the OAuth layer, both generated from existing code
 rather than maintained by hand, both served at stable, well-known locations a client can
-discover without being told where to look first.
+discover without being told where to look first. A Data Trust Registry listing lets data
+destinations find the API in the first place.

@@ -15,8 +15,8 @@ machines; this job makes it understandable by people.
 - **Endpoint reference** — one entry per [job 5](05-choosing-endpoints.md) endpoint: method,
   path, auth required, and request/response shapes linked to their
   [job 3](03-json-schema.md) schemas. Say plainly which [job 8](08-pagination.md) mechanism
-  each collection endpoint uses — job 8's own discovery metadata says *what* the mechanism is;
-  the prose here is what explains *how* to actually use it, cursor value and all. An OpenAPI
+  each collection endpoint uses — job 15's discovery metadata may say *what* the mechanism is;
+  the prose here is what explains *how* to actually use it, pagination approach and all. An OpenAPI
   document is a reasonable way to produce this rather than hand-writing it: it can reference
   the same [job 3](03-json-schema.md) schemas directly, and tools like Swagger UI or Redoc
   turn it into a browsable, interactive reference for free.

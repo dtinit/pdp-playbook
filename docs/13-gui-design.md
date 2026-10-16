@@ -43,14 +43,18 @@ A couple of things follow from taking this seriously:
   [job 3](03-json-schema.md) already made — a user's playlists and listen history shouldn't
   land in one concatenated document. Whether that means several files inside one archive or
   several separate downloads is a choice made below, not something to decide here.
-- **Reuse the real pagination, don't special-case it.** Walk each collection with whatever
-  [job 8](08-pagination.md) mechanism that endpoint actually uses, the same way any other
+- **Consider reusing the real pagination implementation as a client.** 
+  This would mean walking each collection with whatever
+  [job 8](08-pagination.md) mechanism that object actually uses, the same way any other
   client would, instead of adding a "give me everything at once" mode that only the export
-  screen uses and only the export screen tests.  Each page of results should be a separate
-  JSON file although the page size might default to being rather large, such that only exports
-  larger than 1MB actually break up into pages.  Exporting pages of < 1MB rather than a single
-  5MB personal data archive may be much better performance.  Figure out your own Goldilocks
-  size.
+  screen uses and only the export screen tests.  
+- **Return multiple exports rather than over-large exports.** This could be as small as exporting
+  each page ([job 8](08-pagination.md)) of results as a separate JSON file, or combine several pages together into
+  until reaching some manageable size.  The upper limit might default to being rather large, such that only exports
+  larger than 1MB actually break up into pages. You may be able to find an optimal middle point
+  between exports that
+  are too large and exports that are too numerous, considering both service performance and the 
+  user experience.  Figure out your own Goldilocks size.
 - **Keep JSON formatting.** Don't underestimate users, or the software that may be helping
   them! Machine-readable data is valuable. If an HTML version of the export is also desired,
   it can be achieved with different templates applied to the same data from the same object

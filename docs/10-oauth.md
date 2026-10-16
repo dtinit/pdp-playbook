@@ -108,8 +108,8 @@ Issue short-lived access tokens with a refresh token behind them. This is also t
 mechanism behind the [README's regulatory notes](../README.md#meeting-regulatory-requirements):
 the DMA's "continuous" access doesn't require a long-lived credential sitting around
 forever, or a streaming connection — a refresh token lets an authorized third party come back
-next week, mint a new short-lived access token, and pick up exactly where
-[job 8](08-pagination.md)'s cursor left off. Short access-token lifetimes limit the blast
+next week, mint a new short-lived access token, and start fetching data with just the new
+content. Short access-token lifetimes limit the blast
 radius if one leaks; the refresh token is the piece that actually needs careful storage and
 prompt revocation.
 

@@ -41,6 +41,9 @@ Watch for references to other users showing up in what looks like a single-user 
 shared playlist or a comment thread. [Job 7](07-references-to-other-users.md) covers how to
 handle that without just filtering it out silently.
 
+Collections *may* need some kind of pagination, see [job 8](08-pagination.md), but many collections can
+be returned in one GET.
+
 ## Blobs of unusual shape or size
 
 Consider whether blobs in rare formats should be transformed on their way out.  A song

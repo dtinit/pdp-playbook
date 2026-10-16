@@ -11,6 +11,11 @@ While breaking up large collections, consider how they're ordered.
 Ordering by date starting from most recent is often the most useful, because
 the user or their software may be most interested in recent data.
 
+Also consider how clients will request data.  Do clients synch all data once then seek updates
+only? Do they need to synch older content that changed
+as well as newer content?  Paging by updated-date may be more effective than paging by
+creation-date.
+
 ## Option 1: do nothing
 
 If a collection reliably stays small enough, just return all of it in one response.
@@ -76,7 +81,7 @@ If a collection reliably stays small enough, just return all of it in one respon
   ```
 
   wrapped in a token like `base64({"createdAt": "...", "id": "evt_492"})`, opaque to the
-  client on both ends. Wrap every response the same way, defined as its own
+  client on both ends. Wrap every page of results the same way, defined as its own
   [job 3](03-json-schema.md) schema:
 
   ```json
@@ -87,7 +92,9 @@ If a collection reliably stays small enough, just return all of it in one respon
   ```
 
 - **When it fits:** large or fast-growing collections, especially ones where third-party
-  clients need reliable incremental sync rather than a one-time export.
+  clients need reliable incremental sync rather than a one-time export.  Also note that
+  cursors work best with data that is getting new records, rather than data with older
+  records that can be updated and need to be resynched.
 
 ## Option 4: partition by a natural facet of the data
 

@@ -34,6 +34,11 @@ place with looser access control than the system it authenticates into. Log the 
 non-secret identifier (its ID, or a hash) instead, the same value used to look it up, not the
 value that proves possession of it.
 
+Signed file URLs from [job 5](05-choosing-endpoints.md#signed-endpoints-need-hardening)
+are secrets too, so log the object ID, not the URL. Watch for them showing up indirectly — a
+web server or CDN log that records full request URLs, or a `Referer` header, captures the
+signature along with everything else.
+
 ## The access log is itself personal data
 
 A log of who accessed a given user's data is, itself, information about that user — and about

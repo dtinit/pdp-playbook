@@ -45,6 +45,11 @@ failing schema validation in CI the same as a failing type check.
 
 ## Output of this step
 
-Working read endpoints, each backed by a mapper that produces its job 3 schema's shape from
+This step builds provisional endpoints.  It would be perfectly reasonable to design
+the endpoints in [job 5](05-choosing-endpoints.md) first then hook those endpoints into storage queries, in fact
+that is a user-first design approach where the user is the API user.  
+
+After this job and job 5, you will have new export read endpoints,
+each backed by a mapper that produces its job 3 schema's shape from
 real storage and is tested against it. [Job 8](08-pagination.md) builds pagination on top of
 these reads, and [job 15](15-api-discovery.md) points clients at them.

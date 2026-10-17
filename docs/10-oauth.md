@@ -4,7 +4,9 @@
 data," as distinct from [job 9](09-api-keys.md)'s "who's calling." A third party holding a
 valid OAuth token can hit the exact same `/me/playlists` endpoint from
 [job 5](05-choosing-endpoints.md) as the user themselves — the token is what turns "my own
-data" into "data I've explicitly let this app see."
+data" into "data I've explicitly let this app see."  This works so much
+better than requiring third-party services or apps to have the user's 
+password!  
 
 ## Which flow
 
@@ -73,11 +75,18 @@ types is usually the right shape.
 
 ## The authorization screen
 
+The authorization screen needs some careful design so that the user is not 
+vulnerable to illegitimate services pretending to be legitimate services, or
+asking for more access than is needed.  Be sure to show which third-party
+app is asking, using whatever the app registered as its display name as well
+as its domain name.  See below about knowing when to trust third-parties.
+
+
 Show scopes in plain language, tied to what the user actually recognizes — "your playlists,"
-not `read:playlists` — and show which third-party app is asking, using whatever the app
-registered as its display name. Let the user approve a subset of the requested scopes where
+not `read:playlists`.  Let the user approve a subset of the requested scopes where
 that's feasible, rather than an all-or-nothing accept; if the app claims it needs a scope, it
 should say what it's for, and the user should be able to say no to what it doesn't need.
+
 
 ## Establishing trust with data destinations
 
@@ -92,6 +101,10 @@ data portability ecosystem participant for the whole ecosystem, so individual se
 don't each have to vet every destination themselves.  Query the DTR before issuing
 client credentials and when receiving data requests to make sure that the
 destination has not been withdrawn or suspended from the registry.
+
+Each service (each different domain name, and each operator with its own privacy policy)
+needs to apply to the Data Trust Registry, so this step is for operators, not developers
+of general service software that will run on many sites.
 
 ## Issuing client credentials
 

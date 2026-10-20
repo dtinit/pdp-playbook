@@ -26,6 +26,14 @@ URL for anyone to guess or enumerate. This is still usable by third parties: a t
 holding an OAuth token issued by a particular account can access that same `/me/playlists`
 on the account owner's behalf — see [job 10](10-oauth.md).
 
+> [!WARNING]
+> Don't add an admin or support override to these endpoints — no `?user_id=` that only staff
+> may use, no role check that lets an admin's token see past `/me`. Every such exception is a
+> path around the structural guarantee above, and one bug or stolen token away from exposing
+> every user's data. If staff need to read user data, give them completely separate endpoints,
+> ideally on a separate internal host, with their own authentication, unreachable by any
+> third-party OAuth token, and logged by [job 11](11-logging-access.md).
+
 ## Collections, items, and blobs
 
 The index file job 3 said collections need (albums, playlists, anything with per-item
@@ -40,6 +48,42 @@ and leaves you free to change blob storage or add a CDN later without touching t
 Watch for references to other users showing up in what looks like a single-user resource — a
 shared playlist or a comment thread. [Job 7](07-references-to-other-users.md) covers how to
 handle that without just filtering it out silently.
+
+Collections *may* need some kind of pagination, see [job 8](08-pagination.md), but many collections can
+be returned in one GET.
+
+## Signed endpoints need hardening
+
+A signed URL is a bearer credential for one file: anyone holding it can download that file,
+and the request never touches [job 6](06-access-control.md)'s identity check. This is super useful for 
+blobs that are already in network-attached storage and can greatly improve performance
+of export operations.  But since access control is done when the signed URL is issued,
+everything job 6 enforces has to happen before the URL is issued, and its lifetime is the only control
+left afterwards.
+
+- **Sign only what a scoped query returned.** Generate the URL from the storage key on a
+  metadata row fetched by job 6's owner-scoped query — never from a path, key, or file ID the
+  client supplied. A `/files/{id}` or "get download link" endpoint that signs whatever it's
+  asked for is the usual way this bypasses ownership entirely.
+- **Keep the bucket private.** No public-read objects and no permanent public URLs. Use
+  unguessable storage keys, not `users/1234/photo-1.jpg`, so a mistake elsewhere doesn't
+  leave the files enumerable.
+- **Sign one object, read-only.** No wildcard or prefix policies (a signed cookie covering a
+  user's whole folder, say), and no upload methods signed from a read endpoint.
+- **Keep expiry short — minutes, not days.** Revoking a [job 10](10-oauth.md) grant doesn't
+  reach URLs already handed out, so expiry is their only revocation. For a very large download
+  that might outlast it, let the client re-fetch the item's metadata for a fresh URL rather
+  than lengthening the expiry for everyone.
+- **Mind pagination.** Signing a URL for every item on a large [job 8](08-pagination.md) page
+  means many expire before a client gets to them. Either sign on the item endpoint instead, or
+  set expiry to cover the time it takes to walk one page.
+- **Make the CDN check signatures.** If a CDN caches the object without taking the signature
+  into account, it can serve the file to requests that never had a valid one. Have the CDN
+  validate signatures itself, or don't cache these objects.
+
+Signed URLs also leak through logs; [job 11](11-logging-access.md) covers keeping them out.
+Extend job 6's cross-user test to files: as user A, ask for a file belonging to user B and
+assert no URL comes back, and assert that an expired URL is rejected.
 
 ## Blobs of unusual shape or size
 

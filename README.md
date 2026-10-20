@@ -37,7 +37,7 @@ implications of introducing such requirements.
 
 Many such services do other things besides hold personal data.
 As an example, Ravelry (one of my favourite sites) was initially
-collecting community data about knitting patterns and yarn,
+collecting shared community data about knitting patterns and yarn,
 and that led to collecting personal data about
 knitters' projects and ratings of patterns and yarn.  As Ravelry's
 community grew, knitters' post history became another important type of
@@ -58,6 +58,10 @@ These are illustrative examples and are not intended to be exhaustive.  Email an
 
 Throughout, *third party* means the app or service a user authorizes to receive
 their data, which the data portability ecosystem calls a *data destination*.
+
+This advice may need to be generalized to work for software that is intended
+to be run on many *services*.  It would be ideal if the core service software included
+personal data rights features.
 
 ## How to use this playbook
 

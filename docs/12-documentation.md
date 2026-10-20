@@ -15,8 +15,8 @@ machines; this job makes it understandable by people.
 - **Endpoint reference** — one entry per [job 5](05-choosing-endpoints.md) endpoint: method,
   path, auth required, and request/response shapes linked to their
   [job 3](03-json-schema.md) schemas. Say plainly which [job 8](08-pagination.md) mechanism
-  each collection endpoint uses — job 8's own discovery metadata says *what* the mechanism is;
-  the prose here is what explains *how* to actually use it, cursor value and all. An OpenAPI
+  each collection endpoint uses — job 15's discovery metadata may say *what* the mechanism is;
+  the prose here is what explains *how* to actually use it, pagination approach and all. An OpenAPI
   document is a reasonable way to produce this rather than hand-writing it: it can reference
   the same [job 3](03-json-schema.md) schemas directly, and tools like Swagger UI or Redoc
   turn it into a browsable, interactive reference for free.
@@ -30,6 +30,7 @@ machines; this job makes it understandable by people.
   earlier in this playbook already forced the decision. Writing the docs is often exactly when
   you notice every endpoint has been improvising its own ad hoc error body — better to
   standardize it here than let integrators reverse-engineer a different shape per endpoint.
+  (OAut library endpoints may be omitted from this standardization.)
 
 ## Tell integrators how to survive your own evolution policy
 
@@ -39,7 +40,11 @@ evolve them is adding new optional fields in place, not cutting a new version. T
 the server side, since the schema file and the data it validates change together. It's not
 automatically safe on the client side — a third party that fetched the schema once, saved a
 copy, and validates incoming responses against that frozen copy will start rejecting perfectly
-valid responses the moment a new optional field is added.
+valid responses the moment a new optional field is added.  It's a difficult tradeoff,
+arising from the tension between documenting what the service produces now and what it
+might produce in the future; and between whether the service should use the schema on
+generating data or whether the client should use the schema to validate what the service sent
+(generally, no).
 
 Say this explicitly: integrators should treat the schema's `$id` as a live document to
 re-fetch, not a frozen contract to copy once, and their own validation should tolerate

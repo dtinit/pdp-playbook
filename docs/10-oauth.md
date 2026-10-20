@@ -4,7 +4,9 @@
 data," as distinct from [job 9](09-api-keys.md)'s "who's calling." A third party holding a
 valid OAuth token can hit the exact same `/me/playlists` endpoint from
 [job 5](05-choosing-endpoints.md) as the user themselves — the token is what turns "my own
-data" into "data I've explicitly let this app see."
+data" into "data I've explicitly let this app see."  This works so much
+better than requiring third-party services or apps to have the user's 
+password!  
 
 ## Which flow
 
@@ -84,11 +86,18 @@ types is usually the right shape.
 
 ## The authorization screen
 
+The authorization screen needs some careful design so that the user is not 
+vulnerable to illegitimate services pretending to be legitimate services, or
+asking for more access than is needed.  Be sure to show which third-party
+app is asking, using whatever the app registered as its display name as well
+as its domain name.  See below about knowing when to trust third-parties.
+
+
 Show scopes in plain language, tied to what the user actually recognizes — "your playlists,"
-not `read:playlists` — and show which third-party app is asking, using whatever the app
-registered as its display name. Let the user approve a subset of the requested scopes where
+not `read:playlists`.  Let the user approve a subset of the requested scopes where
 that's feasible, rather than an all-or-nothing accept; if the app claims it needs a scope, it
 should say what it's for, and the user should be able to say no to what it doesn't need.
+
 
 ## Establishing trust with data destinations
 
@@ -103,6 +112,10 @@ data portability ecosystem participant for the whole ecosystem, so individual se
 don't each have to vet every destination themselves.  Query the DTR before issuing
 client credentials and when receiving data requests to make sure that the
 destination has not been withdrawn or suspended from the registry.
+
+Each service (each different domain name, and each operator with its own privacy policy)
+needs to apply to the Data Trust Registry, so this step is for operators, not developers
+of general service software that will run on many sites.
 
 ## Issuing client credentials
 
@@ -119,8 +132,8 @@ Issue short-lived access tokens with a refresh token behind them. This is also t
 mechanism behind the [README's regulatory notes](../README.md#meeting-regulatory-requirements):
 the DMA's "continuous" access doesn't require a long-lived credential sitting around
 forever, or a streaming connection — a refresh token lets an authorized third party come back
-next week, mint a new short-lived access token, and pick up exactly where
-[job 8](08-pagination.md)'s cursor left off. Short access-token lifetimes limit the blast
+next week, mint a new short-lived access token, and start fetching data with just the new
+content. Short access-token lifetimes limit the blast
 radius if one leaks; the refresh token is the piece that actually needs careful storage and
 prompt revocation.
 
@@ -154,11 +167,56 @@ launch. A server that naively exact-matches the whole registered redirect URI, p
 will reject every one of these logins — confirm the library allows loopback redirects to vary
 by port before assuming this case is handled.
 
+## Hardening
+
+The libraries above are a starting point, not a guarantee — and a coding agent may pick a
+different one entirely. Defaults vary between libraries, and some are looser than the spec.
+Whatever library you end up with, write a test for each of these rather than assuming it, the
+same way [job 6](06-access-control.md) tests the cross-user case on purpose:
+
+- **Exact redirect URI matching.** Compare the requested `redirect_uri` to the registered one
+  as an exact string. Prefix, suffix, or subdomain matching lets a host like
+  `evilxyzphotos.com` (which ends with `xyzphotos.com`) receive a user's authorization code.
+  The loopback port above is the one deliberate exception.
+- **Secrets stored hashed and compared in constant time.** Treat a `client_secret` the way
+  [job 9](09-api-keys.md) treats an API key: store a hash, never the secret. Compare with a
+  constant-time function (`crypto.timingSafeEqual` in Node, `hmac.compare_digest` in Python),
+  never `==` or `!=`, which can leak through response timing how much of a guess was right.
+- **Codes and tokens bound to the client they were issued to.** An authorization code is
+  redeemable once, only by the client it was issued to, and only with the same
+  `redirect_uri`. A refresh token is redeemable only by the client it was issued to
+  ([RFC 6749 §6](https://www.rfc-editor.org/rfc/rfc6749#section-6)). Test it directly: issue
+  a refresh token to app A, redeem it as app B, and assert it's rejected.
+- **Refresh token rotation.** Issue a new refresh token each time one is used, and invalidate
+  the old one. If an old refresh token is ever presented again, revoke the whole grant — one of
+  the two parties holding it isn't the real client.
+- **PKCE with `S256` only.** Reject the `plain` method, and require PKCE from public clients
+  rather than merely accepting it.
+
+The authorization screen needs hardening too, since it's the one page where a single click
+hands over a user's data:
+
+- **No framing.** Send `Content-Security-Policy: frame-ancestors 'none'` (or
+  `X-Frame-Options: DENY`) so another site can't embed the screen invisibly and trick a user
+  into clicking Approve.
+- **CSRF protection on the approve action.** Approval is a state-changing request from a
+  logged-in user; protect it like any other.
+- **Show where the data is actually going.** A display name is whatever the registrant typed.
+  Show the redirect URI's host, or the domain verified when
+  [issuing client credentials](#issuing-client-credentials), alongside it.
+- **Don't auto-approve new scopes.** Skipping the screen for a client the user already
+  approved is a reasonable convenience, but only for scopes already granted — never for new
+  ones the app has started asking for since.
+
+[RFC 9700](https://www.rfc-editor.org/rfc/rfc9700) (OAuth 2.0 Security Best Current Practice)
+is the fuller list, and worth a read before launch.
+
 ## Output of this step
 
 An OAuth authorization server issuing short-lived, scoped access tokens via the Authorization
 Code flow (with PKCE available for public clients), with per-data-type scopes matching
 [job 3](03-json-schema.md)/[job 5](05-choosing-endpoints.md),
-an authorization screen a user can actually make a decision from, and working revocation.
+an authorization screen a user can actually make a decision from, working revocation, and
+tests confirming the library's defaults meet the hardening checklist above.
 [Job 11](11-logging-access.md) logs every grant this issues, and
 [job 15's discovery document](15-api-discovery.md) publishes the scopes a client can request.

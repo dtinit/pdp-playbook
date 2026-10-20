@@ -5,6 +5,11 @@ This is where the threads from [job 6](06-access-control.md), [job 9](09-api-key
 user, which OAuth grant — and this job is what actually records that those resolutions
 happened. There are two distinct logs here, not one, and they serve different purposes.
 
+Logs that go into the database for querying later (e.g. 'grant log' rows that tell a user which 
+third-party services accessed the user's data) are different than logs that go to
+a separate, log database or file system. Most of this advice applies to both types,
+but some distinctions are drawn below.
+
 ## Two logs, not one
 
 - **Grant log** — an append-only record of authorization lifecycle events: a user granted a
@@ -34,6 +39,11 @@ place with looser access control than the system it authenticates into. Log the 
 non-secret identifier (its ID, or a hash) instead, the same value used to look it up, not the
 value that proves possession of it.
 
+Signed file URLs from [job 5](05-choosing-endpoints.md#signed-endpoints-need-hardening)
+are secrets too, so log the object ID, not the URL. Watch for them showing up indirectly — a
+web server or CDN log that records full request URLs, or a `Referer` header, captures the
+signature along with everything else.
+
 ## The access log is itself personal data
 
 A log of who accessed a given user's data is, itself, information about that user — and about
@@ -47,13 +57,16 @@ access to a logging system built for unrelated purposes.
 
 Keep grant-log entries for as long as the grant matters for dispute resolution or compliance
 review.  This is a small, low-volume log, so there's little cost to keeping it well past when
-an access log entry would be discarded. Keep access-log entries only as long as they're useful
+an access log entry would be discarded.  If the grant-log entries are in the main database
+along with other personal data, these may be deleted only when the user account is deleted.
+
+Keep access-log entries only as long as they're useful
 for security investigation and abuse detection, then age them out. The access log grows with
 every single request, and indefinite retention of "who looked at what, when" is itself a
-privacy liability, not just a storage cost. Make the access-log retention window configurable
-rather than hard-coded — how much access history is actually worth keeping varies a lot by
-company and by how the log ends up getting used, and that's a call worth leaving to whoever
-operates the service rather than presuming here.
+privacy liability, not just a storage cost.  
+
+Retention enformcement may need to be explicitly built into log systems in order to keep personal-data
+retention promises. 
 
 ## Reuse what already exists
 

@@ -34,8 +34,7 @@ infrastructure applies here too. The new pieces below need to be *accounted for*
 ## Capacity planning for bursty, read-heavy traffic
 
 This API's traffic shape is different from typical product traffic: third-party clients doing
-[job 8](08-pagination.md)'s cursor-based incremental sync show up periodically and pull
-whatever changed, and a first full sync or a
+incremental sync show up periodically and pull whatever changed, and a first full sync or a
 [job 13](13-gui-design.md) export walks a user's entire history in one burst. Plan capacity
 for that pattern specifically — occasional large read bursts, not steady per-second traffic —
 and treat [job 9](09-api-keys.md)'s rate limits as the actual backstop that keeps one client's

@@ -6,6 +6,12 @@ their end. This job is where the policy stops being a stated intention and becom
 actually enforced — mainly through tests that catch a violation before it ships, not after an
 integrator reports one.
 
+## Include the schema $id in data with $schema
+
+While this isn't part of any standard, it's extremely common for JSON documents to 
+have a $schema property that points to the governing schema, using that schema's $id.
+Make sure this stays up to date (although it should almost never change, per the extension policy).
+
 ## Classify every schema change before it ships
 
 - **Additive** — a new optional field, a new enum value, a new endpoint. This is the default
